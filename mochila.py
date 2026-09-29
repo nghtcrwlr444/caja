@@ -1,31 +1,32 @@
-cajas_base = [
-    ["A", 4.0, 10.0],
-    ["B", 3.0, 4.0],
-    ["C", 3.0, 7.0],
-    ["D", 2.0, 5.0],
-    ["E", 1.0, 3.0],
-    ["F", 2.0, 3.0],
-    ["G", 1.8, 2.0],
-    ["H", 3.0, 3.0]
+class Mochila:
+    def __init__(self, c, soles, kg):
+        self.c = c
+        self.soles = soles
+        self.kg = kg
+        self.ratio = soles / kg
+        self.kg_cargar = 0.0
+        self.me_pagan = 0.0
+
+lista_mochila = [
+    Mochila("A", 4.0, 10.0),
+    Mochila("B", 3.0, 4.0),
+    Mochila("C", 3.0, 7.0),
+    Mochila("D", 2.0, 5.0),
+    Mochila("E", 1.0, 3.0),
+    Mochila("F", 2.0, 3.0),
+    Mochila("G", 1.8, 2.0),
+    Mochila("H", 3.0, 3.0)
 ]
 
-cajas = []
-for elemento in cajas_base:
-    nombre = elemento[0]
-    soles = elemento[1]
-    kg = elemento[2]
-    ratio = soles / kg
-    cajas.append([nombre, soles, kg, ratio])
-
-cantidad = len(cajas)
+cantidad = len(lista_mochila)
 for pasada in range(cantidad):
     for actual in range(0, cantidad - pasada - 1):
-        if cajas[actual][3] < cajas[actual + 1][3]:
-            cajas[actual], cajas[actual + 1] = cajas[actual + 1], cajas[actual]
+        if lista_mochila[actual].ratio < lista_mochila[actual + 1].ratio:
+            lista_mochila[actual], lista_mochila[actual + 1] = lista_mochila[actual + 1], lista_mochila[actual]
 
 print("--- TABLA ORDENADA (C | S/ | Kg | S/ / Kg) ---")
-for fila in cajas:
-    print(f"Caja {fila[0]} | S/ {fila[1]} | {fila[2]} Kg | Ratio: {round(fila[3], 3)}")
+for objeto in lista_mochila:
+    print(f"Caja {objeto.c} | S/ {objeto.soles} | {objeto.kg} Kg | S/ / Kg: {round(objeto.ratio, 3)}")
 
 m = float(input("\nIngrese el peso maximo m que puede llevar la mochila: "))
 
@@ -37,27 +38,24 @@ for pos in range(cantidad):
     if m == 0:
         break
         
-    nombre = cajas[pos][0]
-    soles = cajas[pos][1]
-    kg = cajas[pos][2]
-    ratio = cajas[pos][3]
+    caja = lista_mochila[pos]
 
-    if kg <= m:
-        kg_cargar = kg
-        pago = soles
-        m = m - kg
+    if caja.kg <= m:
+        caja.kg_cargar = caja.kg
+        caja.me_pagan = caja.soles
+        m = m - caja.kg
     else:
-        kg_cargar = m
-        pago = kg_cargar * ratio
+        caja.kg_cargar = m
+        caja.me_pagan = caja.kg_cargar * caja.ratio
         m = 0
 
-    peso_total = peso_total + kg_cargar
-    soles_totales = soles_totales + pago
-    seleccionadas.append([nombre, kg_cargar, pago])
+    peso_total = peso_total + caja.kg_cargar
+    soles_totales = soles_totales + caja.me_pagan
+    seleccionadas.append(caja)
 
 print("\n--- CAJAS SELECCIONADAS ---")
 for item in seleccionadas:
-    print(f"Caja: {item[0]} | Kg a cargar: {round(item[1], 2)} Kg | Me pagan: S/ {round(item[2], 2)}")
+    print(f"Caja: {item.c} | Kg cargar: {round(item.kg_cargar, 2)} Kg | Me pagan: S/ {round(item.me_pagan, 2)}")
 
-print(f"\nPeso total cargado: {round(peso_total, 2)} Kg")
-print(f"Soles totales obtenidos: S/ {round(soles_totales, 2)}")
+print(f"\nPeso total: {round(peso_total, 2)} Kg")
+print(f"Soles totales: S/ {round(soles_totales, 2)}")
